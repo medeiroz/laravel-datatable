@@ -56,36 +56,24 @@ class EventDatatable extends Datatable
     public function columns(): Collection
     {
         return collect([
-            Column::from('title', ColumnTypeEnum::STRING)
-                ->label('Titlesub')
+            Column::from('name', ColumnTypeEnum::STRING)
+                ->label('Name')
                 ->class('text-left')
                 ->searchable()
                 ->filterable()
                 ->sortable()
-                ->link('partner.manager.event.show'),
+                ->link('users.show'), // route name
 
-            Column::from('organization.trade', ColumnTypeEnum::STRING)
-                ->label('Organização')
+            Column::from('address.city', ColumnTypeEnum::STRING)
+                ->label('Address')
                 ->class('text-left')
                 ->searchable()
                 ->filterable()
                 ->sortable()
-                ->link('partner.manager.organization.show'),
-
-            Column::from('date', ColumnTypeEnum::DATE)
-                ->label('Data')
-                ->class('text-center')
-                ->filterable()
-                ->sortable(),
-
-            Column::from('is_vip', ColumnTypeEnum::BOOLEAN)
-                ->label('Vip')
-                ->class('text-center')
-                ->filterable()
-                ->sortable(),
+                ->link('users.addresses.show'),
 
             Column::from('updated_at', ColumnTypeEnum::DATE)
-                ->label('Atualizado em')
+                ->label('Last Update')
                 ->class('text-left')
                 ->sortable(),
         ]);
@@ -106,10 +94,6 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 ## Contributing
 
 Please see [CONTRIBUTING](https://github.com/spatie/.github/blob/main/CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
 ## Credits
 

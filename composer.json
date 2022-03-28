@@ -1,10 +1,11 @@
 {
     "name": "medeiroz/laravel-datatable",
-    "description": "This is my package laravel-datatable",
+    "description": "Laravel Datatable",
     "keywords": [
         "medeiroz",
         "laravel",
-        "laravel-datatable"
+        "laravel-datatable",
+        "datatable"
     ],
     "homepage": "https://github.com/medeiroz/laravel-datatable",
     "license": "MIT",
@@ -34,8 +35,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Medeiroz\\LaravelDatatable\\": "src",
-            "Medeiroz\\LaravelDatatable\\Database\\Factories\\": "database/factories"
+            "Medeiroz\\LaravelDatatable\\": "src"
         }
     },
     "autoload-dev": {
