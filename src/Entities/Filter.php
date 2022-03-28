@@ -2,11 +2,11 @@
 
 namespace Medeiroz\LaravelDatatable\Entities;
 
-use Medeiroz\LaravelDatatable\Conditions\ConditionMaker;
-use Medeiroz\LaravelDatatable\Enums\ConditionEnum;
-use Medeiroz\LaravelDatatable\Enums\ColumnTypeEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Medeiroz\LaravelDatatable\Conditions\ConditionMaker;
+use Medeiroz\LaravelDatatable\Enums\ColumnTypeEnum;
+use Medeiroz\LaravelDatatable\Enums\ConditionEnum;
 
 class Filter
 {
@@ -21,8 +21,7 @@ class Filter
         string|ColumnTypeEnum        $type,
         string|ConditionEnum         $condition,
         string|int|float|bool|Carbon $value,
-    )
-    {
+    ) {
         $this->setColumn($column);
         $this->setType($type);
         $this->setCondition($condition);
@@ -45,6 +44,7 @@ class Filter
         }
 
         $this->column = $column;
+
         return $this;
     }
 
@@ -102,6 +102,7 @@ class Filter
     protected function setRelationship(string $relationship): self
     {
         $this->relationship = $relationship;
+
         return $this;
     }
 
@@ -122,6 +123,7 @@ class Filter
     protected function applyCondition(Builder $builder): Builder
     {
         $conditionInstance = ConditionMaker::make($this);
+
         return $conditionInstance->apply($builder);
     }
 }

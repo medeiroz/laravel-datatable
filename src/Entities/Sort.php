@@ -2,18 +2,17 @@
 
 namespace Medeiroz\LaravelDatatable\Entities;
 
-use Medeiroz\LaravelDatatable\Enums\OrderEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
+use Medeiroz\LaravelDatatable\Enums\OrderEnum;
 
 class Sort
 {
     final public function __construct(
         public readonly string $column,
         public readonly OrderEnum $order = OrderEnum::ASC,
-    )
-    {
+    ) {
     }
 
     public static function asc(string $column): Sort
