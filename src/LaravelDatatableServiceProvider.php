@@ -2,9 +2,9 @@
 
 namespace Medeiroz\LaravelDatatable;
 
+use Medeiroz\LaravelDatatable\Commands\LaravelDatatableCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Medeiroz\LaravelDatatable\Commands\LaravelDatatableCommand;
 
 class LaravelDatatableServiceProvider extends PackageServiceProvider
 {

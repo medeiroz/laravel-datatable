@@ -3,8 +3,8 @@
 namespace Medeiroz\LaravelDatatable\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Medeiroz\LaravelDatatable\LaravelDatatableServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
