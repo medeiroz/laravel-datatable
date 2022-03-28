@@ -2,7 +2,6 @@
 
 namespace Medeiroz\LaravelDatatable;
 
-
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +18,7 @@ abstract class LaravelDatatable
     {
     }
 
-    public abstract function columns(): Collection;
+    abstract public function columns(): Collection;
 
     public function getDefaultFilters(): Collection
     {
@@ -124,6 +123,7 @@ abstract class LaravelDatatable
             ->map(function (Collection $group, string $groupName) {
                 $columns = $group->map(fn (Column $column) => $column->name);
                 $columns = $columns->push('id');
+
                 return new EagerLoad($groupName, $columns->toArray());
             });
     }
@@ -135,7 +135,7 @@ abstract class LaravelDatatable
             ->map(fn (string $name) => Str::of($name)->singular() . '_id');
 
         return $this->columns()
-            ->filter(fn (Column $column) => !$column->relationship || $column->relationship->isEmpty())
+            ->filter(fn (Column $column) => ! $column->relationship || $column->relationship->isEmpty())
             ->map(fn (Column $column) => $column->name)
             ->push('id')
             ->concat($relationshipsNames);

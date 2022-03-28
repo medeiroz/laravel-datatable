@@ -2,7 +2,6 @@
 
 namespace Medeiroz\LaravelDatatable\Enums;
 
-
 use Medeiroz\LaravelDatatable\Conditions\ContainsCondition;
 
 enum ConditionEnum: string
@@ -37,7 +36,6 @@ enum ConditionEnum: string
 //            self::LESS_OR_EQUAL => LessOrEqualCondition::class,
 //            self::EMPTY => EmptyCondition::class,
 //            self::NOT_EMPTY => NotEmptyCondition::class,
-
         };
     }
 }
