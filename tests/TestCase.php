@@ -24,13 +24,10 @@ class TestCase extends Orchestra
         ];
     }
 
-    public function getEnvironmentSetUp($app)
+    protected function getEnvironmentSetUp($app)
     {
-        config()->set('database.default', 'testing');
+        config()->set('datatable.per_page', 15);
 
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_laravel-datatable_table.php.stub';
-        $migration->up();
-        */
+        $app['config']['app.timezone'] = 'utc';
     }
 }
