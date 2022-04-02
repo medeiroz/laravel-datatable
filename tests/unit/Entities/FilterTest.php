@@ -195,9 +195,9 @@ it('apply without relationship', function () {
             ->andReturn($mockBuilder);
     });
 
-    app()->offsetSet(
+    $this->app->bind(
         ContainsCondition::class,
-        $mockCondition
+        fn () => $mockCondition
     );
 
     $filter = new Filter(
@@ -205,6 +205,35 @@ it('apply without relationship', function () {
         ColumnTypeEnum::STRING,
         ConditionEnum::CONTAINS,
         'medeiroz',
+    );
+
+    $filter->apply($mockBuilder);
+});
+
+it('apply with relationship', function () {
+    $mockBuilder = Mockery::mock(Builder::class, function (MockInterface $mock) {
+        $mock->shouldReceive('whereHas')
+            ->once()
+            ->with('address', Mockery::on(fn (Closure $callback) => true));
+    });
+
+    $mockCondition = Mockery::mock(ContainsCondition::class, function (MockInterface $mock) use ($mockBuilder) {
+        $mock->shouldReceive('apply')
+            ->with($mockBuilder)
+            ->once()
+            ->andReturn($mockBuilder);
+    });
+
+    $this->app->bind(
+        ContainsCondition::class,
+        fn () => $mockCondition
+    );
+
+    $filter = new Filter(
+        'address.street',
+        ColumnTypeEnum::STRING,
+        ConditionEnum::CONTAINS,
+        'Av. Paulista',
     );
 
     $filter->apply($mockBuilder);
