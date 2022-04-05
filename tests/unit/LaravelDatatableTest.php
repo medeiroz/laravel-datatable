@@ -5,11 +5,11 @@ use Medeiroz\LaravelDatatable\Entities\Sort;
 use Medeiroz\LaravelDatatable\LaravelDatatable;
 
 it('getDefaultFilters', function () {
-    $myModel = new class extends Model {
+    $myModel = new class () extends Model {
     };
 
     $myDatatable = $this->getMockForAbstractClass(LaravelDatatable::class, [
-        $myModel
+        $myModel,
     ]);
 
     expect($myDatatable->getDefaultFilters())->toEqual(collect());
