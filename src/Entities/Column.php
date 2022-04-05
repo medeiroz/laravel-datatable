@@ -16,7 +16,7 @@ class Column
     public ?Stringable $label = null;
     public ?Stringable $relationship = null;
     public ?Stringable $class = null;
-    public ?Stringable $link = null;
+    public ?Stringable $route = null;
 
     final public function __construct(
         public Stringable $name,
@@ -47,9 +47,9 @@ class Column
         return $this;
     }
 
-    public function link(string|Stringable $link): self
+    public function route(string|Stringable $route): self
     {
-        $this->link = Str::of($link);
+        $this->route = Str::of($route);
 
         return $this;
     }

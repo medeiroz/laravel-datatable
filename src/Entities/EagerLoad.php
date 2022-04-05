@@ -17,6 +17,6 @@ class EagerLoad
         $eagerLoadNameWithColumns = $this->name . ':' . implode(',', $this->columns);
         $builder->with($eagerLoadNameWithColumns);
 
-        return  $this;
+        return $this;
     }
 }
