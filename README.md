@@ -62,7 +62,7 @@ class EventDatatable extends Datatable
                 ->searchable()
                 ->filterable()
                 ->sortable()
-                ->link('users.show'), // route name
+                ->route('users.show'), // route name
 
             Column::from('address.city', ColumnTypeEnum::STRING)
                 ->label('Address')
@@ -70,7 +70,7 @@ class EventDatatable extends Datatable
                 ->searchable()
                 ->filterable()
                 ->sortable()
-                ->link('users.addresses.show'),
+                ->route('users.addresses.show'),
 
             Column::from('updated_at', ColumnTypeEnum::DATE)
                 ->label('Last Update')
