@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Medeiroz\LaravelDatatable\Entities\Column;
@@ -11,13 +9,11 @@ use Medeiroz\LaravelDatatable\Entities\Sort;
 use Medeiroz\LaravelDatatable\Enums\ColumnTypeEnum;
 use Medeiroz\LaravelDatatable\Enums\ConditionEnum;
 use Medeiroz\LaravelDatatable\LaravelDatatable;
-use Mockery\MockInterface;
-
 
 it('Construct with Model', function () {
     $myModel = $this->getMockForAbstractClass(Model::class);
     $myDatatable = $this->getMockForAbstractClass(LaravelDatatable::class, [
-        $myModel
+        $myModel,
     ]);
 
     expect($myDatatable)->toBeInstanceOf(LaravelDatatable::class);
@@ -26,7 +22,7 @@ it('Construct with Model', function () {
 it('Construct with Builder', function () {
     $myModel = $this->getMockForAbstractClass(Model::class);
     $myDatatable = $this->getMockForAbstractClass(LaravelDatatable::class, [
-        $myModel->newModelQuery()
+        $myModel->newModelQuery(),
     ]);
 
     expect($myDatatable)->toBeInstanceOf(LaravelDatatable::class);
@@ -36,7 +32,7 @@ it('Construct with Builder', function () {
 it('defaults', function () {
     $myModel = $this->getMockForAbstractClass(Model::class);
     $myDatatable = $this->getMockForAbstractClass(LaravelDatatable::class, [
-        $myModel
+        $myModel,
     ]);
 
     expect($myDatatable->defaultFilters())->toEqual(collect());
@@ -50,7 +46,7 @@ it('defaults', function () {
 it('getBuilder', function () {
     $myModel = $this->getMockForAbstractClass(Model::class);
 
-    $myDatatable = new class($myModel) extends LaravelDatatable {
+    $myDatatable = new class ($myModel) extends LaravelDatatable {
         public function columns(): Collection
         {
             return collect([
@@ -81,7 +77,7 @@ it('getBuilder', function () {
 it('getBuilder with override default sort', function () {
     $myModel = $this->getMockForAbstractClass(Model::class);
 
-    $myDatatable = new class($myModel) extends LaravelDatatable {
+    $myDatatable = new class ($myModel) extends LaravelDatatable {
         public function columns(): Collection
         {
             return collect([
@@ -131,7 +127,7 @@ it('getBuilder with sort by request', function () {
 
     $myModel = $this->getMockForAbstractClass(Model::class);
 
-    $myDatatable = new class($myModel) extends LaravelDatatable {
+    $myDatatable = new class ($myModel) extends LaravelDatatable {
         public function columns(): Collection
         {
             return collect([
@@ -155,7 +151,7 @@ it('getBuilder with sort by request', function () {
 it('getBuilder with override default filter', function () {
     $myModel = $this->getMockForAbstractClass(Model::class);
 
-    $myDatatable = new class($myModel) extends LaravelDatatable {
+    $myDatatable = new class ($myModel) extends LaravelDatatable {
         public function columns(): Collection
         {
             return collect([
@@ -186,7 +182,7 @@ it('getBuilder with override default filter', function () {
     expect($resultBuilder->getQuery()->bindings['where'])
         ->toEqual([
             'name',
-            '%medeiroz%'
+            '%medeiroz%',
         ]);
 });
 
@@ -205,7 +201,7 @@ it('getBuilder with filter by request', function () {
 
     $myModel = $this->getMockForAbstractClass(Model::class);
 
-    $myDatatable = new class($myModel) extends LaravelDatatable {
+    $myDatatable = new class ($myModel) extends LaravelDatatable {
         public function columns(): Collection
         {
             return collect([
@@ -229,6 +225,6 @@ it('getBuilder with filter by request', function () {
     expect($resultBuilder->getQuery()->bindings['where'])
         ->toEqual([
             'age',
-            '%24%'
+            '%24%',
         ]);
 });
