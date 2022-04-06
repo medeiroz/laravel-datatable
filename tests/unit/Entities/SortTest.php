@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use Medeiroz\LaravelDatatable\Entities\Sort;
 use Medeiroz\LaravelDatatable\Enums\OrderEnum;
-use Illuminate\Support\Str;
 use Mockery\MockInterface;
 
 it('constructor', function () {
@@ -59,4 +59,3 @@ it('apply', function () {
 
     $eagerLoad->apply($mockBuilder);
 });
-
