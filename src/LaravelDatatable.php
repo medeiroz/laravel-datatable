@@ -14,13 +14,19 @@ use Medeiroz\LaravelDatatable\Entities\Sort;
 
 abstract class LaravelDatatable
 {
-    public function __construct(protected readonly Model $model)
-    {
+    protected readonly Builder|Model $builder;
+
+    public function __construct(
+        Builder|Model $builder,
+    ) {
+        $this->builder = ($builder instanceof Builder)
+            ? $builder
+            : $builder->newModelQuery();
     }
 
     abstract public function columns(): Collection;
 
-    public function getDefaultFilters(): Collection
+    public function defaultFilters(): Collection
     {
         return collect();
     }
@@ -46,8 +52,8 @@ abstract class LaravelDatatable
     {
         $columns = $this->getColumnNamesRaw()->toArray();
 
-        /** @var Builder $builder */
-        $builder = $this->model
+        $builder = $this->builder
+            ->clone()
             ->select($columns);
 
         $this->applyEagerLoads($builder, $this->getEagerLoads());
@@ -76,25 +82,24 @@ abstract class LaravelDatatable
                 ->filter(function (array $filter) {
                     $columnName = Str::of($filter['column'])->lower();
                     $column = $this->columns()
-                        ->first(fn (Column $column) => $column->getFullName()->lower()->exactly($columnName));
+                        ->first(fn (Column $column) => (string) $column->getFullName()->lower() === (string) $columnName);
 
                     return ($column && $column->filterable);
-                })
-                ->map(function (array $filter) {
+                })->map(function (array $filter) {
                     return app()->makeWith(Filter::class, $filter);
                 });
         }
 
-        return $this->getDefaultFilters();
+        return $this->defaultFilters();
     }
 
     private function getSorts(): Collection
     {
         if (request()->has('sort')) {
             return collect(
-                request()->input('sort', [])
+                request()->input('sort')
             )
-                ->map(fn (array $sort) => new Sort($sort[0], $sort[1]));
+                ->map(fn (array $sort) => Sort::by($sort[0], $sort[1]));
         }
 
         return $this->defaultSort();
@@ -122,7 +127,7 @@ abstract class LaravelDatatable
         return $this->groupRelationships()
             ->map(function (Collection $group, string $groupName) {
                 $columns = $group->map(fn (Column $column) => $column->name);
-                $columns = $columns->push('id');
+                $columns = $columns->push(Str::of('id'));
 
                 return new EagerLoad($groupName, $columns->toArray());
             });
@@ -137,8 +142,9 @@ abstract class LaravelDatatable
         return $this->columns()
             ->filter(fn (Column $column) => ! $column->relationship || $column->relationship->isEmpty())
             ->map(fn (Column $column) => $column->name)
-            ->push('id')
-            ->concat($relationshipsNames);
+            ->push(Str::of('id'))
+            ->concat($relationshipsNames)
+            ->unique();
     }
 
     private function applyEagerLoads(Builder $builder, Collection $eagerLoads): Builder
