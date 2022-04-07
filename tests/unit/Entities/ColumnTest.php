@@ -2,6 +2,7 @@
 
 use Medeiroz\LaravelDatatable\Entities\Column;
 use Medeiroz\LaravelDatatable\Enums\ColumnTypeEnum;
+use Medeiroz\LaravelDatatable\Exceptions\RelationshipColumnUnsortable;
 
 it('from', function () {
     $column = Column::from('first_name', ColumnTypeEnum::STRING);
@@ -97,6 +98,11 @@ it('sortable falsy', function () {
 
     expect($column->sortable)->toBeFalsy();
 });
+
+it('sortable with relationship column', function () {
+    Column::from('address.city', ColumnTypeEnum::STRING)
+        ->sortable();
+})->throws(RelationshipColumnUnsortable::class);
 
 it('refs', function () {
     $column = Column::from('first_and_last_name', ColumnTypeEnum::STRING)

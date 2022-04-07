@@ -5,6 +5,7 @@ namespace Medeiroz\LaravelDatatable\Entities;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 use Medeiroz\LaravelDatatable\Enums\ColumnTypeEnum;
+use Medeiroz\LaravelDatatable\Exceptions\RelationshipColumnUnsortable;
 
 class Column
 {
@@ -75,8 +76,18 @@ class Column
         return $this;
     }
 
+    /**
+     * @throws RelationshipColumnUnsortable
+     */
     public function sortable(bool $sortable = true): self
     {
+        if (
+            $this->hasRelationship()
+            && $sortable
+        ) {
+            throw new RelationshipColumnUnsortable;
+        }
+
         $this->sortable = $sortable;
 
         return $this;
@@ -97,5 +108,10 @@ class Column
         ])->filter()->implode('.');
 
         return Str::of($fullName);
+    }
+
+    public function hasRelationship(): bool
+    {
+        return $this->relationship && $this->relationship->isNotEmpty();
     }
 }
