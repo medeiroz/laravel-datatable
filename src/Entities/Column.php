@@ -85,7 +85,7 @@ class Column
             $this->hasRelationship()
             && $sortable
         ) {
-            throw new RelationshipColumnUnsortable;
+            throw new RelationshipColumnUnsortable();
         }
 
         $this->sortable = $sortable;

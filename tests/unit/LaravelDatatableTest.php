@@ -8,7 +8,6 @@ use Medeiroz\LaravelDatatable\Entities\Filter;
 use Medeiroz\LaravelDatatable\Entities\Sort;
 use Medeiroz\LaravelDatatable\Enums\ColumnTypeEnum;
 use Medeiroz\LaravelDatatable\Enums\ConditionEnum;
-use Medeiroz\LaravelDatatable\Exceptions\RelationshipColumnUnsortable;
 use Medeiroz\LaravelDatatable\LaravelDatatable;
 
 it('Construct with Model', function () {
