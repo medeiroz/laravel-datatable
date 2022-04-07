@@ -47,7 +47,7 @@ it('defaults', function () {
 it('getBuilder', function () {
     $myModel = $this->getMockForAbstractClass(Model::class);
 
-    $myDatatable = new class($myModel) extends LaravelDatatable {
+    $myDatatable = new class ($myModel) extends LaravelDatatable {
         public function columns(): Collection
         {
             return collect([
@@ -78,7 +78,7 @@ it('getBuilder', function () {
 it('getBuilder with override default sort', function () {
     $myModel = $this->getMockForAbstractClass(Model::class);
 
-    $myDatatable = new class($myModel) extends LaravelDatatable {
+    $myDatatable = new class ($myModel) extends LaravelDatatable {
         public function columns(): Collection
         {
             return collect([
@@ -128,7 +128,7 @@ it('getBuilder with sort by request', function () {
 
     $myModel = $this->getMockForAbstractClass(Model::class);
 
-    $myDatatable = new class($myModel) extends LaravelDatatable {
+    $myDatatable = new class ($myModel) extends LaravelDatatable {
         public function columns(): Collection
         {
             return collect([
@@ -152,7 +152,7 @@ it('getBuilder with sort by request', function () {
 it('getBuilder with override default filter', function () {
     $myModel = $this->getMockForAbstractClass(Model::class);
 
-    $myDatatable = new class($myModel) extends LaravelDatatable {
+    $myDatatable = new class ($myModel) extends LaravelDatatable {
         public function columns(): Collection
         {
             return collect([
@@ -202,7 +202,7 @@ it('getBuilder with filter by request', function () {
 
     $myModel = $this->getMockForAbstractClass(Model::class);
 
-    $myDatatable = new class($myModel) extends LaravelDatatable {
+    $myDatatable = new class ($myModel) extends LaravelDatatable {
         public function columns(): Collection
         {
             return collect([
