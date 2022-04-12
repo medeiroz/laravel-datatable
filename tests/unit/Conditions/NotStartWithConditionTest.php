@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Eloquent\Builder;
-use Medeiroz\LaravelDatatable\Conditions\ContainsCondition;
 use Medeiroz\LaravelDatatable\Conditions\NotStartWithCondition;
 use Medeiroz\LaravelDatatable\Entities\Filter;
 use Medeiroz\LaravelDatatable\Enums\ColumnTypeEnum;
