@@ -20,7 +20,7 @@ class Filter
         string                              $column,
         string|ColumnTypeEnum               $type,
         string|ConditionEnum                $condition,
-        string|int|float|bool|Carbon|null   $value,
+        string|int|float|bool|Carbon|null   $value = null,
     ) {
         $this->setColumn($column);
         $this->setType($type);
