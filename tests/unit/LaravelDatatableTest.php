@@ -245,5 +245,4 @@ it('getPaginator', function () {
 
     expect($resultPaginator->perPage())->toEqual(config('datatable.per_page'));
     expect($resultPaginator->currentPage())->toEqual(1);
-
 });
