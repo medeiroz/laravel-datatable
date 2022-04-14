@@ -28,7 +28,6 @@ it('Construct with Builder', function () {
     expect($myDatatable)->toBeInstanceOf(LaravelDatatable::class);
 });
 
-
 it('defaults', function () {
     $myModel = $this->getMockForAbstractClass(Model::class);
     $myDatatable = $this->getMockForAbstractClass(LaravelDatatable::class, [
@@ -186,7 +185,6 @@ it('getBuilder with override default filter', function () {
         ]);
 });
 
-
 it('getBuilder with filter by request', function () {
     $this->postJson('/', [
         'filters' => [
@@ -227,4 +225,25 @@ it('getBuilder with filter by request', function () {
             'age',
             '%24%',
         ]);
+});
+
+it('getPaginator', function () {
+    $myModel = $this->getMockForAbstractClass(Model::class);
+
+    $myDatatable = new class ($myModel) extends LaravelDatatable {
+        public function columns(): Collection
+        {
+            return collect([
+                Column::from('id', ColumnTypeEnum::NUMBER),
+                Column::from('name', ColumnTypeEnum::STRING),
+            ]);
+        }
+    };
+
+    $resultPaginator = $myDatatable->getPaginator();
+
+
+    expect($resultPaginator->perPage())->toEqual(config('datatable.per_page'));
+    expect($resultPaginator->currentPage())->toEqual(1);
+
 });
