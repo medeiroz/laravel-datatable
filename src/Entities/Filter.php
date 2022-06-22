@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Medeiroz\LaravelDatatable\Conditions\ConditionMaker;
 use Medeiroz\LaravelDatatable\Enums\ColumnTypeEnum;
 use Medeiroz\LaravelDatatable\Enums\ConditionEnum;
+use Medeiroz\LaravelDatatable\Enums\GroupConditionEnum;
 
 class Filter
 {
@@ -14,6 +15,7 @@ class Filter
     private ColumnTypeEnum $type;
     private ConditionEnum $condition;
     private string|int|float|bool|Carbon|null $value;
+    private GroupConditionEnum $groupCondition;
     private string|null $relationship = null;
 
     public function __construct(
@@ -21,11 +23,13 @@ class Filter
         string|ColumnTypeEnum               $type,
         string|ConditionEnum                $condition,
         string|int|float|bool|Carbon|null   $value = null,
+        string|GroupConditionEnum $groupCondition = GroupConditionEnum::AND,
     ) {
         $this->setColumn($column);
         $this->setType($type);
         $this->setCondition($condition);
         $this->setValue($value);
+        $this->setGroupCondition($groupCondition);
     }
 
     public function getColumn(): string
@@ -74,20 +78,24 @@ class Filter
         return $this;
     }
 
-    public function getValue(): string|int|float|bool|Carbon
+    public function getValue(): string|int|float|bool
     {
         return $this->value;
     }
 
-    public function setValue(string|int|float|bool|Carbon|null $value): self
+    public function setValue(null|string|int|float|bool|Carbon $value): self
     {
-        $this->value = match ($this->getType()) {
-            ColumnTypeEnum::STRING => (string) $value,
-            ColumnTypeEnum::BOOLEAN => (bool) $value,
-            ColumnTypeEnum::NUMBER => (float) $value,
-            ColumnTypeEnum::DATE => Carbon::parse($value)->setTime(0, 0),
-            ColumnTypeEnum::DATE_TIME => Carbon::parse($value),
-        };
+        try {
+            $this->value = match ($this->getType()) {
+                ColumnTypeEnum::STRING => (string) $value,
+                ColumnTypeEnum::BOOLEAN => (bool) $value,
+                ColumnTypeEnum::NUMBER => (float) $value,
+                ColumnTypeEnum::DATE => (string) $value,
+                ColumnTypeEnum::DATE_TIME => (string) $value,
+            };
+        } catch (\Throwable $exception) {
+            $this->value = $value;
+        }
 
         return $this;
     }
@@ -104,16 +112,43 @@ class Filter
         return $this;
     }
 
+    public function getGroupCondition(): GroupConditionEnum
+    {
+        return $this->groupCondition;
+    }
+
+    public function setGroupCondition(string|GroupConditionEnum $groupCondition): self
+    {
+        $this->groupCondition = ($groupCondition instanceof GroupConditionEnum)
+            ? $groupCondition
+            : GroupConditionEnum::from($groupCondition);
+
+        return $this;
+    }
+
     public function apply(Builder $builder): self
     {
         if ($this->getRelationship()) {
-            $builder->whereHas(
-                $this->getRelationship(),
-                fn (Builder $relationshipBuilder) => $this->apply($relationshipBuilder)
-            );
-        }
+            $closure = function (Builder $relationshipBuilder) {
+                $relationshipBuilder->where(function (Builder $whereBuilder) {
+                    $this->applyCondition($whereBuilder);
+                });
+            };
 
-        $this->applyCondition($builder);
+            if ($this->getGroupCondition() === GroupConditionEnum::AND) {
+                $builder->whereHas(
+                    $this->getRelationship(),
+                    $closure
+                );
+            } elseif ($this->getGroupCondition() === GroupConditionEnum::OR) {
+                $builder->orWhereHas(
+                    $this->getRelationship(),
+                    $closure
+                );
+            }
+        } else {
+            $this->applyCondition($builder);
+        }
 
         return $this;
     }
@@ -121,7 +156,6 @@ class Filter
     protected function applyCondition(Builder $builder): Builder
     {
         $conditionInstance = ConditionMaker::make($this);
-
         return $conditionInstance->apply($builder);
     }
 }

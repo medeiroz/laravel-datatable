@@ -18,6 +18,10 @@
     beStrictAboutOutputDuringTests="true"
     verbose="true"
 >
+    <php>
+        <server name="DB_CONNECTION" value="sqlite"/>
+        <server name="DB_DATABASE" value=":memory:"/>
+    </php>
     <testsuites>
         <testsuite name="Medeiroz Test Suite">
             <directory>tests</directory>

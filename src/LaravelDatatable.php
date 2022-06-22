@@ -10,7 +10,9 @@ use Illuminate\Support\Str;
 use Medeiroz\LaravelDatatable\Entities\Column;
 use Medeiroz\LaravelDatatable\Entities\EagerLoad;
 use Medeiroz\LaravelDatatable\Entities\Filter;
+use Medeiroz\LaravelDatatable\Entities\FilterGroup;
 use Medeiroz\LaravelDatatable\Entities\Sort;
+use Medeiroz\LaravelDatatable\Enums\GroupConditionEnum;
 
 abstract class LaravelDatatable
 {
@@ -25,6 +27,8 @@ abstract class LaravelDatatable
     }
 
     abstract public function columns(): Collection;
+
+    public abstract function routes(): Collection;
 
     public function defaultFilters(): Collection
     {
@@ -52,6 +56,7 @@ abstract class LaravelDatatable
     {
         $columns = $this->getColumnNamesRaw()->toArray();
 
+        /** @var Builder $builder */
         $builder = $this->builder
             ->clone()
             ->select($columns);
@@ -73,24 +78,26 @@ abstract class LaravelDatatable
 
     private function getFilters(): Collection
     {
-        $filters = collect(
+        $filters = $this->defaultFilters();
+        $termFilter = $this->getFiltersByTerm(request()->input('term'));
+
+        $filtersRequest = collect(
             request()->input('filters', [])
         );
 
-        if ($filters->isNotEmpty()) {
-            return $filters
+        if ($filtersRequest->isNotEmpty()) {
+            $filters = $filtersRequest
                 ->filter(function (array $filter) {
                     $columnName = Str::of($filter['column'])->lower();
                     $column = $this->columns()
-                        ->first(fn (Column $column) => (string) $column->getFullName()->lower() === (string) $columnName);
+                        ->first(fn (Column $column) => $column->getFullName()->lower()->exactly($columnName));
 
                     return ($column && $column->filterable);
-                })->map(function (array $filter) {
-                    return app()->makeWith(Filter::class, $filter);
-                });
+                })
+                ->map(fn (array $filter) => app()->makeWith(Filter::class, $filter));
         }
 
-        return $this->defaultFilters();
+        return $filters->push($termFilter);
     }
 
     private function getSorts(): Collection
@@ -163,8 +170,23 @@ abstract class LaravelDatatable
 
     private function applyFilters(Builder $builder, Collection $filters): Builder
     {
-        $filters->each(fn (Filter $filter) => $filter->apply($builder));
+        $filters->each(function (Filter|FilterGroup $filter) use ($builder) {
+            $filter->apply($builder);
+        });
 
         return $builder;
+    }
+
+    private function getFiltersByTerm(?string $term): FilterGroup
+    {
+        $filters = collect();
+
+        if ($term) {
+            $filters = $this->columns()
+                ->filter(fn(Column $column) => $column->filterable)
+                ->map(fn(Column $column) => $column->makeTermFilter($term));
+        }
+
+        return new FilterGroup($filters, GroupConditionEnum::AND);
     }
 }

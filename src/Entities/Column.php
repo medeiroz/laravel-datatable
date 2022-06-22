@@ -2,22 +2,26 @@
 
 namespace Medeiroz\LaravelDatatable\Entities;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 use Medeiroz\LaravelDatatable\Enums\ColumnTypeEnum;
+use Medeiroz\LaravelDatatable\Enums\ConditionEnum;
 use Medeiroz\LaravelDatatable\Exceptions\RelationshipColumnUnsortable;
 
-class Column
+class Column implements Arrayable
 {
     public bool $filterable = false;
     public bool $searchable = false;
     public bool $sortable = false;
     public bool $hidden = false;
     public array $refs = [];
+    public array $extraArgs = [];
     public ?Stringable $label = null;
     public ?Stringable $relationship = null;
     public ?Stringable $class = null;
     public ?Stringable $route = null;
+    public ?Stringable $formatter = null;
 
     final public function __construct(
         public Stringable $name,
@@ -27,6 +31,14 @@ class Column
             $this->name = $name->afterLast('.');
             $this->relationship = $name->before('.');
         }
+
+        match ($type) {
+            ColumnTypeEnum::DATE => $this->formatter('date'),
+            ColumnTypeEnum::DATE_TIME => $this->formatter('dateTime'),
+            ColumnTypeEnum::BOOLEAN => $this->formatter('boolean'),
+            ColumnTypeEnum::NUMBER => $this->formatter('number'),
+            ColumnTypeEnum::STRING => null,
+        };
     }
 
     public static function from(string $name, ColumnTypeEnum $type): static
@@ -52,6 +64,12 @@ class Column
     {
         $this->route = Str::of($route);
 
+        return $this;
+    }
+
+    public function formatter(string|Stringable $formatter): self
+    {
+        $this->formatter = Str::of($formatter);
         return $this;
     }
 
@@ -100,6 +118,12 @@ class Column
         return $this;
     }
 
+    public function extraArgs(array $extraArgs): self
+    {
+        $this->extraArgs = $extraArgs;
+        return $this;
+    }
+
     public function getFullName(): Stringable
     {
         $fullName = collect([
@@ -113,5 +137,29 @@ class Column
     public function hasRelationship(): bool
     {
         return $this->relationship && $this->relationship->isNotEmpty();
+    }
+
+    public function toArray(): array
+    {
+        $result = (array) $this;
+
+        $extraArgs = $result['extraArgs'];
+        unset($result['extraArgs']);
+        $result = array_merge($result, $extraArgs);
+
+        $result['fullName'] = $this->getFullName();
+
+        return $result;
+    }
+
+    public function makeTermFilter(string $term): Filter
+    {
+        return new Filter(
+            $this->getFullName()->toString(),
+            $this->type,
+            ConditionEnum::CONTAINS,
+            $term,
+            GroupConditionEnum::OR,
+        );
     }
 }

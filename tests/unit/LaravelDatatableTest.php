@@ -53,6 +53,11 @@ it('getBuilder', function () {
                 Column::from('name', ColumnTypeEnum::STRING),
             ]);
         }
+
+        public function routes(): Collection
+        {
+            return collect();
+        }
     };
 
     $resultBuilder = $myDatatable->getBuilder();
@@ -83,6 +88,11 @@ it('getBuilder with override default sort', function () {
                 Column::from('age', ColumnTypeEnum::NUMBER),
                 Column::from('name', ColumnTypeEnum::STRING),
             ]);
+        }
+
+        public function routes(): Collection
+        {
+            return collect();
         }
 
         public function defaultSort(): Collection
@@ -134,6 +144,11 @@ it('getBuilder with sort by request', function () {
                 Column::from('name', ColumnTypeEnum::STRING),
             ]);
         }
+
+        public function routes(): Collection
+        {
+            return collect();
+        }
     };
 
     $resultBuilder = $myDatatable->getBuilder();
@@ -159,6 +174,11 @@ it('getBuilder with override default filter', function () {
             ]);
         }
 
+        public function routes(): Collection
+        {
+            return collect();
+        }
+
         public function defaultFilters(): Collection
         {
             return collect([
@@ -173,14 +193,13 @@ it('getBuilder with override default filter', function () {
         ->toEqual([
             [
                 'type' => 'raw',
-                'sql' => 'unaccent(?) ILIKE unaccent(?)',
+                'sql' => 'unaccent(name) ILIKE unaccent(?)',
                 'boolean' => 'and',
             ],
         ]);
 
     expect($resultBuilder->getQuery()->bindings['where'])
         ->toEqual([
-            'name',
             '%medeiroz%',
         ]);
 });
@@ -207,6 +226,11 @@ it('getBuilder with filter by request', function () {
                 Column::from('name', ColumnTypeEnum::STRING),
             ]);
         }
+
+        public function routes(): Collection
+        {
+            return collect();
+        }
     };
 
     $resultBuilder = $myDatatable->getBuilder();
@@ -215,34 +239,13 @@ it('getBuilder with filter by request', function () {
         ->toEqual([
             [
                 'type' => 'raw',
-                'sql' => 'unaccent(?) ILIKE unaccent(?)',
+                'sql' => 'unaccent(age) ILIKE unaccent(?)',
                 'boolean' => 'and',
             ],
         ]);
 
     expect($resultBuilder->getQuery()->bindings['where'])
         ->toEqual([
-            'age',
             '%24%',
         ]);
-});
-
-it('getPaginator', function () {
-    $myModel = $this->getMockForAbstractClass(Model::class);
-
-    $myDatatable = new class ($myModel) extends LaravelDatatable {
-        public function columns(): Collection
-        {
-            return collect([
-                Column::from('id', ColumnTypeEnum::NUMBER),
-                Column::from('name', ColumnTypeEnum::STRING),
-            ]);
-        }
-    };
-
-    $resultPaginator = $myDatatable->getPaginator();
-
-
-    expect($resultPaginator->perPage())->toEqual(config('datatable.per_page'));
-    expect($resultPaginator->currentPage())->toEqual(1);
 });

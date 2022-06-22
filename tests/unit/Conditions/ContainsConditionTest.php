@@ -5,12 +5,13 @@ use Medeiroz\LaravelDatatable\Conditions\ContainsCondition;
 use Medeiroz\LaravelDatatable\Entities\Filter;
 use Medeiroz\LaravelDatatable\Enums\ColumnTypeEnum;
 use Medeiroz\LaravelDatatable\Enums\ConditionEnum;
+use Medeiroz\LaravelDatatable\Enums\GroupConditionEnum;
 use Mockery\MockInterface;
 
 it('Apply', function () {
     $mockBuilder = Mockery::mock(Builder::class, function (MockInterface $mock) {
         $mock->shouldReceive('whereRaw')
-            ->with('unaccent(?) ILIKE unaccent(?)', ['name', '%medeiroz%'])
+            ->with('unaccent(name) ILIKE unaccent(?)', ['%medeiroz%'], GroupConditionEnum::AND->value)
             ->once()
             ->andReturnSelf();
     });
@@ -21,6 +22,7 @@ it('Apply', function () {
         ColumnTypeEnum::STRING,
         ConditionEnum::CONTAINS,
         'medeiroz',
+        GroupConditionEnum::AND
     );
 
     $condition = new ContainsCondition($filter);

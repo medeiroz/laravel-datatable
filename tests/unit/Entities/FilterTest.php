@@ -159,14 +159,10 @@ it('setValue date', function ($value, $expected) {
         $value,
     );
 
-    $expectedTimeStringDate = (string) Carbon::parse($expected)->setTime(0, 0);
-
-    expect($filter->getValue())->toBeInstanceOf(Carbon::class);
     expect($filter->getValue())->toEqual($expected);
-    expect((string) $filter->getValue())->toEqual($expectedTimeStringDate);
 })->with([
-    ['2022-03-31', Carbon::parse('2022-03-31', 'utc')],
-    [Carbon::parse('2022-04-01 15:25', 'utc'), Carbon::parse('2022-04-01', 'utc')],
+    ['2022-03-31', '2022-03-31'],
+    [Carbon::parse('2022-04-01 15:25:00', 'utc'), '2022-04-01 15:25:00'],
 ]);
 
 it('setValue date time', function ($value, $expected) {
@@ -177,11 +173,10 @@ it('setValue date time', function ($value, $expected) {
         $value,
     );
 
-    expect($filter->getValue())->toBeInstanceOf(Carbon::class);
     expect($filter->getValue())->toEqual($expected);
 })->with([
-    ['2022-03-31 12:32', Carbon::parse('2022-03-31 12:32', 'utc')],
-    [Carbon::parse('2022-04-01 05:41', 'utc'), Carbon::parse('2022-04-01 05:41', 'utc')],
+    ['2022-03-31 12:32', '2022-03-31 12:32'],
+    [Carbon::parse('2022-04-01 05:41', 'utc'), '2022-04-01 05:41:00'],
 ]);
 
 
@@ -216,18 +211,6 @@ it('apply with relationship', function () {
             ->once()
             ->with('address', Mockery::on(fn (Closure $callback) => true));
     });
-
-    $mockCondition = Mockery::mock(ContainsCondition::class, function (MockInterface $mock) use ($mockBuilder) {
-        $mock->shouldReceive('apply')
-            ->with($mockBuilder)
-            ->once()
-            ->andReturn($mockBuilder);
-    });
-
-    $this->app->bind(
-        ContainsCondition::class,
-        fn () => $mockCondition
-    );
 
     $filter = new Filter(
         'address.street',
