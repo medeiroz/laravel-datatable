@@ -70,6 +70,7 @@ class Column implements Arrayable
     public function formatter(string|Stringable $formatter): self
     {
         $this->formatter = Str::of($formatter);
+
         return $this;
     }
 
@@ -121,6 +122,7 @@ class Column implements Arrayable
     public function extraArgs(array $extraArgs): self
     {
         $this->extraArgs = $extraArgs;
+
         return $this;
     }
 

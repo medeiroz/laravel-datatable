@@ -2,20 +2,16 @@
 
 namespace Medeiroz\LaravelDatatable\Entities;
 
-
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Medeiroz\LaravelDatatable\Enums\GroupConditionEnum;
 
 class FilterGroup
 {
-
     public function __construct(
         public readonly Collection $filters,
         public readonly string|GroupConditionEnum $groupCondition = GroupConditionEnum::AND,
-    )
-    {
-
+    ) {
     }
 
     public function apply(Builder $builder): Builder
@@ -33,5 +29,4 @@ class FilterGroup
 
         return $builder;
     }
-
 }
