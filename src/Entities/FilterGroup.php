@@ -9,13 +9,10 @@ use Medeiroz\LaravelDatatable\Enums\GroupConditionEnum;
 
 class FilterGroup
 {
-
     public function __construct(
         public readonly Collection $filters,
         public readonly string|GroupConditionEnum $groupCondition = GroupConditionEnum::_AND,
-    )
-    {
-
+    ) {
     }
 
     public function apply(Builder $builder): Builder
@@ -33,5 +30,4 @@ class FilterGroup
 
         return $builder;
     }
-
 }

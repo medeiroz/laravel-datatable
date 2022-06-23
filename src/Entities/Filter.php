@@ -156,6 +156,7 @@ class Filter
     protected function applyCondition(Builder $builder): Builder
     {
         $conditionInstance = ConditionMaker::make($this);
+
         return $conditionInstance->apply($builder);
     }
 }

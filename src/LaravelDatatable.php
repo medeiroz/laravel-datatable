@@ -28,7 +28,7 @@ abstract class LaravelDatatable
 
     abstract public function columns(): Collection;
 
-    public abstract function routes(): Collection;
+    abstract public function routes(): Collection;
 
     public function defaultFilters(): Collection
     {
@@ -183,8 +183,8 @@ abstract class LaravelDatatable
 
         if ($term) {
             $filters = $this->columns()
-                ->filter(fn(Column $column) => $column->filterable)
-                ->map(fn(Column $column) => $column->makeTermFilter($term));
+                ->filter(fn (Column $column) => $column->filterable)
+                ->map(fn (Column $column) => $column->makeTermFilter($term));
         }
 
         return new FilterGroup($filters, GroupConditionEnum::_AND);
