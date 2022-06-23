@@ -2,7 +2,6 @@
 
 namespace Medeiroz\LaravelDatatable\Entities;
 
-
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Medeiroz\LaravelDatatable\Enums\GroupConditionEnum;
