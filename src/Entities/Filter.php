@@ -23,7 +23,7 @@ class Filter
         string|ColumnTypeEnum               $type,
         string|ConditionEnum                $condition,
         string|int|float|bool|Carbon|null   $value = null,
-        string|GroupConditionEnum $groupCondition = GroupConditionEnum::AND,
+        string|GroupConditionEnum $groupCondition = GroupConditionEnum::_AND,
     ) {
         $this->setColumn($column);
         $this->setType($type);
@@ -135,12 +135,12 @@ class Filter
                 });
             };
 
-            if ($this->getGroupCondition() === GroupConditionEnum::AND) {
+            if ($this->getGroupCondition() === GroupConditionEnum::_AND) {
                 $builder->whereHas(
                     $this->getRelationship(),
                     $closure
                 );
-            } elseif ($this->getGroupCondition() === GroupConditionEnum::OR) {
+            } elseif ($this->getGroupCondition() === GroupConditionEnum::_OR) {
                 $builder->orWhereHas(
                     $this->getRelationship(),
                     $closure

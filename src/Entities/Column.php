@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 use Medeiroz\LaravelDatatable\Enums\ColumnTypeEnum;
 use Medeiroz\LaravelDatatable\Enums\ConditionEnum;
+use Medeiroz\LaravelDatatable\Enums\GroupConditionEnum;
 use Medeiroz\LaravelDatatable\Exceptions\RelationshipColumnUnsortable;
 
 class Column implements Arrayable
@@ -159,7 +160,7 @@ class Column implements Arrayable
             $this->type,
             ConditionEnum::CONTAINS,
             $term,
-            GroupConditionEnum::OR,
+            GroupConditionEnum::_OR,
         );
     }
 }

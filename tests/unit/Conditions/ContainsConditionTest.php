@@ -11,7 +11,7 @@ use Mockery\MockInterface;
 it('Apply', function () {
     $mockBuilder = Mockery::mock(Builder::class, function (MockInterface $mock) {
         $mock->shouldReceive('whereRaw')
-            ->with('unaccent(name) ILIKE unaccent(?)', ['%medeiroz%'], GroupConditionEnum::AND->value)
+            ->with('unaccent(name) ILIKE unaccent(?)', ['%medeiroz%'], GroupConditionEnum::_AND->value)
             ->once()
             ->andReturnSelf();
     });
@@ -22,7 +22,7 @@ it('Apply', function () {
         ColumnTypeEnum::STRING,
         ConditionEnum::CONTAINS,
         'medeiroz',
-        GroupConditionEnum::AND
+        GroupConditionEnum::_AND
     );
 
     $condition = new ContainsCondition($filter);

@@ -4,6 +4,6 @@ namespace Medeiroz\LaravelDatatable\Enums;
 
 enum GroupConditionEnum: string
 {
-    case OR = 'or';
-    case AND = 'and';
+    case _OR = 'or';
+    case _AND = 'and';
 }

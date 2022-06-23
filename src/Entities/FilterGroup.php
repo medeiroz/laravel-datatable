@@ -12,7 +12,7 @@ class FilterGroup
 
     public function __construct(
         public readonly Collection $filters,
-        public readonly string|GroupConditionEnum $groupCondition = GroupConditionEnum::AND,
+        public readonly string|GroupConditionEnum $groupCondition = GroupConditionEnum::_AND,
     )
     {
 
@@ -25,9 +25,9 @@ class FilterGroup
                 ->each(fn (Filter $filter) => $filter->apply($whereBuilder));
         };
 
-        if ($this->groupCondition === GroupConditionEnum::AND) {
+        if ($this->groupCondition === GroupConditionEnum::_AND) {
             $builder->where($closure);
-        } elseif ($this->groupCondition === GroupConditionEnum::OR) {
+        } elseif ($this->groupCondition === GroupConditionEnum::_OR) {
             $builder->orWhere($closure);
         }
 

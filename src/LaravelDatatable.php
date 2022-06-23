@@ -187,6 +187,6 @@ abstract class LaravelDatatable
                 ->map(fn(Column $column) => $column->makeTermFilter($term));
         }
 
-        return new FilterGroup($filters, GroupConditionEnum::AND);
+        return new FilterGroup($filters, GroupConditionEnum::_AND);
     }
 }
